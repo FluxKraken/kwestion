@@ -1,3 +1,4 @@
+use crossterm::cursor::MoveDown;
 use ratatui::widgets::Paragraph;
 
 use super::*;
@@ -11,6 +12,7 @@ pub struct PromptOptions {
     label: bool,
     label_text: String,
     label_width: u16,
+    clear: bool,
 }
 
 impl PromptOptions {
@@ -56,6 +58,11 @@ impl PromptOptions {
         self.label_width = self.label_text.chars().count() as u16;
         self
     }
+
+    pub fn clear(mut self, should_clear: bool) -> Self {
+        self.clear = should_clear;
+        self
+    }
 }
 
 pub fn prompt_with_options(
@@ -69,7 +76,10 @@ pub fn prompt_with_options(
     let mut terminal = ratatui::try_init_with_options(options)?;
     let mut textarea = TextArea::default();
 
-    clear_terminal(&mut terminal)?;
+    if prompt_options.clear {
+        clear_terminal(&mut terminal)?;
+    }
+
     let input_title = prompt.into();
 
     loop {
@@ -146,10 +156,14 @@ pub fn prompt_with_options(
         }
     }
 
-    clear_terminal(&mut terminal)?;
-    ratatui::restore();
-
-    execute!(stdout(), MoveUp(2), MoveToColumn(0),)?;
+    if prompt_options.clear {
+        clear_terminal(&mut terminal)?;
+        ratatui::restore();
+        execute!(stdout(), MoveUp(2), MoveToColumn(0),)?;
+    } else {
+        ratatui::restore();
+        execute!(stdout(), MoveDown(3), MoveToColumn(0),)?;
+    }
 
     Ok(textarea.lines().join(""))
 }
