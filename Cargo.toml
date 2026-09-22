@@ -2,6 +2,9 @@
 name = "kwestion"
 version = "0.1.0"
 edition = "2024"
+authors = ["FluxKraken"]
+license = "MIT"
+description = "A fancy ephemeral textbox input for the terminal."
 
 [dependencies]
 anyhow = "1.0.104"
