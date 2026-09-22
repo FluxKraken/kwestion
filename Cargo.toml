@@ -5,6 +5,7 @@ edition = "2024"
 authors = ["FluxKraken"]
 license = "MIT"
 description = "A fancy ephemeral textbox input for the terminal."
+repository = "https://github.com/FluxKraken/kwestion"
 
 [dependencies]
 anyhow = "1.0.104"
